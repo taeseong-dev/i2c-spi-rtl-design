@@ -188,7 +188,7 @@ Data 및 Multi-byte Transfer Length에 대한 Functional Coverage를 검증하�
 
 <img src="images/i2c_scb.png" width="350">
 
-### FPGA Test
+### I2C FPGA Test
 
 - 목적 : 두 FPGA 간 I2C Write/Read 동작 검증
 
