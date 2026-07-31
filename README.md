@@ -205,7 +205,7 @@ Data 및 Multi-byte Transfer Length에 대한 Functional Coverage를 검증하�
 
 
 #### Logic Analyzer Result
-<img src="images/i2c_fpga_la.png" width="500">
+<img src="images/i2c_fpga_la.png" width="550">
 
 #### FPGA 동작 영상
 https://github.com/user-attachments/assets/4c380b88-1abd-46fa-a774-6d900383a3bc
@@ -292,10 +292,10 @@ https://github.com/user-attachments/assets/4c380b88-1abd-46fa-a774-6d900383a3bc
 
 | Coverage Item | Description |
 |---------------|-------------|
-| Master TX | Master 송신 데이터 Coverage |
-| Slave RX | Slave 수신 데이터 Coverage |
-| Slave TX | Slave 송신 데이터 Coverage |
-| Master RX | Master 수신 데이터 Coverage |
+| Master TX | Master 송신 데이터 |
+| Slave RX | Slave 수신 데이터 |
+| Slave TX | Slave 송신 데이터 |
+| Master RX | Master 수신 데이터 |
 
 #### Functional Coverage Result
 
