@@ -2,6 +2,7 @@
 
 Verilog/SystemVerilog를 사용하여 I2C 및 SPI Master/Slave를 RTL로 설계하고, <br>
 Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
+
 ---
 
 ## Project Overview
@@ -38,7 +39,7 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 
 ### I2C Top Architecture
 
-<img src="images/i2c_top.png" width="650">
+<img src="images/i2c_top.png" width="700">
 
 - I2C Master, Slave로 구성된 Top-Level 구조
 - SCL/SDA 기반 I2C 통신
@@ -117,7 +118,7 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 
 #### I2C Slave FSM
 
-<img src="images/i2c_slave_fsm.png" width="400">
+<img src="images/i2c_slave_fsm.png" width="500">
 
 - **IDLE** : Start Condition 대기
 - **ADDR** : Slave Address 수신 및 비교
@@ -128,7 +129,7 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 
 #### SCL Edge Timing
 
-<img src="images/i2c_slave_edge.png" width="400">
+<img src="images/i2c_slave_edge.png" width="500">
 
 - Rising Edge에서 SDA 신호 Sampling
 - Falling Edge에서 ACK 및 Read Data 출력
@@ -170,7 +171,7 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 
 #### Functional Coverage
 
-Random Sequence를 수행하여 Address, Read/Write Operation,
+Random Sequence를 수행하여 Address, Read/Write Operation,<br>
 Data 및 Multi-byte Transfer Length에 대한 Functional Coverage를 검증하였습니다.
 
 | Coverage Item | Description |
@@ -204,7 +205,7 @@ Data 및 Multi-byte Transfer Length에 대한 Functional Coverage를 검증하�
 
 
 #### Logic Analyzer Result
-<img src="images/i2c_fpga_la.png" width="600">
+<img src="images/i2c_fpga_la.png" width="500">
 
 #### FPGA 동작 영상
 https://github.com/user-attachments/assets/4c380b88-1abd-46fa-a774-6d900383a3bc
@@ -214,7 +215,7 @@ https://github.com/user-attachments/assets/4c380b88-1abd-46fa-a774-6d900383a3bc
 
 ### SPI Top Architecture
 
-<img src="images/spi_top.png" width="650">
+<img src="images/spi_top.png" width="700">
 
 - SPI Master/Slave Top-Level 인터페이스 구성
 - SCLK, MOSI, MISO 및 CS_n 기반 SPI 통신 구조
@@ -237,7 +238,7 @@ https://github.com/user-attachments/assets/4c380b88-1abd-46fa-a774-6d900383a3bc
 
 #### SPI Master FSM
 
-<img src="images/spi_master_fsm.png" width="400">
+<img src="images/spi_master_fsm.png" width="300">
 
 - **IDLE** : Start 신호 대기, SCLK를 CPOL값으로 Idle Level 유지
 - **START** : CS_n HIGH -> LOW 변경 및 전송 시작, CPHA = 0에서 첫 번째 MOSI 데이터를 출력
@@ -275,7 +276,7 @@ https://github.com/user-attachments/assets/4c380b88-1abd-46fa-a774-6d900383a3bc
 
 - Sequence에서 생성한 Transaction을 Driver를 통해 DUT에 전달
 - Monitor에서 SPI 인터페이스(SCLK, MOSI, MISO, CS_n) 기반 Transaction 생성
-- Sequence의 예상 Transaction과 Monitor의 실제 Transaction을 Scoreboard에서 비교하여 SPI 동작을 검증
+- Sequence의 예상 Transaction과 Monitor의 실제 Transaction을 Scoreboard에서 비교하여 검증
 
 #### Test Scenarios
 
@@ -284,7 +285,7 @@ https://github.com/user-attachments/assets/4c380b88-1abd-46fa-a774-6d900383a3bc
 
 #### Functional Coverage
 
-> Covergroup을 통해 Master TX, Slave RX, Slave TX, Master RX를 대상으로
+> Covergroup을 통해 Master TX, Slave RX, Slave TX, Master RX를 대상으로 <br>
 > Functional Coverage를 측정하였습니다.
 
 #### Coverage Items
@@ -324,7 +325,7 @@ https://github.com/user-attachments/assets/4c380b88-1abd-46fa-a774-6d900383a3bc
 
 
 #### Logic Analyzer Result
-<img src="images/spi_fpga_all.png" width="600">
+<img src="images/spi_fpga_all.png" width="400">
 
 #### FPGA 동작 영상
 https://github.com/user-attachments/assets/cefe9681-18cb-4067-88be-2bf5de08db23
