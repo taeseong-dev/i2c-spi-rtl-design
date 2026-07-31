@@ -44,7 +44,7 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 <img src="images/i2c_top.png" width="700">
 
 - I2C Master, Slave로 구성된 Top-Level 구조
-- SCL/SDA 기반 양방향 데이터 통신
+- SCL과 SDA를 기반으로 Address 및 Data 송수신
 
 ---
 
@@ -68,7 +68,7 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 - **WAIT_CMD** : Read/Write 및 Stop/Restart 명령 대기
 - **DATA** : 데이터 송수신
 - **DATA_ACK** : ACK/NACK 송수신
-- **STOP** : Stop Condition 생성 후 IDLE state로 복귀
+- **STOP** : Stop Condition 생성 후 IDLE 상태로 복귀
 
 ---
 
@@ -94,8 +94,8 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 
 <img src="images/I2C_Data.png" width="600">
 
-- Step별 SDA/SCL 출력 값 정의
-- 4-Step Timing에 따른 출력 제어
+- Data Bit 값에 따라 SDA를 High 또는 Low로 출력
+- 4-Step Timing에 따라 SCL을 제어하여 Data Bit 전송
 
 ##### Write Sequence
 
@@ -112,7 +112,7 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 <img src="images/i2c_pull_up.png" width="600">
 
 - SDA는 Open-Drain 방식으로 동작
-- High는 High-Z를 출력, Low는 0을 출력
+- Low 출력 시 `SDA = 0`, High 출력 시 `SDA = High-Z`
 - Pull-up 저항을 통해 SDA가 High 상태를 유지
 
 ---
@@ -145,13 +145,13 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 
 <img src="images/i2c_sim_write.png" width = "700">
 
-- Sequence : START → ADDRESS/RW(`0x24`) → WRITE DATA(`0xab`) → WRITE DATA(`0xcd`) → STOP
+- Sequence: START → ADDRESS/RW (`0x24`) → WRITE DATA (`0xAB`) → WRITE DATA (`0xCD`) → STOP
 - Multi-byte Data Write 수행
 - Master TX Data와 Slave RX Data의 일치 여부 확인
 
-<img src="images/i2c_read.png" width = "700">
+<img src="images/i2c_sim_read.png" width = "700">
 
-- Sequence : START → ADDRESS/RW(`0x25`) → READ DATA(`0xCD`) → STOP
+- Sequence: START → ADDRESS/RW (`0x25`) → READ DATA (`0xCD`) → STOP
 - Single-byte Read 동작 수행
 - Write Data와 Read Data의 일치 여부 확인
 
@@ -183,7 +183,7 @@ Multi-byte Transfer Length에 대한 Functional Coverage를 확인하였습니�
 | Address | Valid Address (`7'h12`) 및 Invalid Address |
 | RW | Read / Write Operation |
 | Data | Boundary Value, Pattern, Bit Pattern 및 Data Range |
-| Num Data | Multi-byte Transfer Length (1~8 Byte) |
+| Num Data | Multi-byte Transfer Length (1~8 bytes) |
 
 <img src="images/i2c_cov.png" width="200">
 
@@ -196,6 +196,7 @@ Multi-byte Transfer Length에 대한 Functional Coverage를 확인하였습니�
 ### I2C FPGA Test
 
 #### Test Scenario
+
 - 두 FPGA 간 I2C Write/Read 동작 검증
 - Write `8'd3` → Write `8'd11` → Read `8'd11` → Write `8'd15` → Read `8'd15`
 
@@ -222,8 +223,8 @@ Multi-byte Transfer Length에 대한 Functional Coverage를 확인하였습니�
 <img src="images/spi_top.png" width="700">
 
 - SPI Master와 Slave로 구성된 Top-Level 구조
-- `SCLK`, `MOSI`, `MISO`, `CS_n`을 통한 Full-Duplex 데이터 통신
-- Master에서 생성한 SCLK와 CS_n을 기준으로 Full-Duplex 데이터 송수신
+- Master에서 생성한 `SCLK`와 `CS_n`을 기준으로 동작
+- `MOSI`와 `MISO`를 통한 Full-Duplex 데이터 송수신
 - SPI Master는 Mode 0~3을 지원하며, SPI Slave는 Mode 0으로 구현
 
 ---
@@ -245,8 +246,8 @@ Multi-byte Transfer Length에 대한 Functional Coverage를 확인하였습니�
 <img src="images/spi_master_fsm.png" width="300">
 
 - **IDLE** : Start 신호 대기 및 `SCLK`를 CPOL 값으로 유지
-- **START** : `CS_n`을 High → Low로 전환하고, CPHA가 0이면 첫 번째 MOSI Data 출력
-- **DATA** : `SCLK` Edge에 따라 8-bit MOSI/MISO Data 송수신
+- **START** : `CS_n`을 High → Low로 전환하고, CPHA가 0이면 첫 번째 `MOSI` Data 출력
+- **DATA** : `SCLK` Edge에 따라 8-bit `MOSI`/`MISO` Data 송수신
 - **STOP** : `CS_n`을 Low → High로 전환하고 IDLE 상태로 복귀
 
 #### SCLK Generation
@@ -255,7 +256,7 @@ Multi-byte Transfer Length에 대한 Functional Coverage를 확인하였습니�
 
 - Clock Divider를 이용하여 `SCLK` 생성
 - `clk_div` 설정값을 통해 SPI 통신 속도 조절
-- Half Tick마다 `SCLK`를 Toggle하여 한 Clock 주기 생성
+- Half Tick마다 `SCLK`를 Toggle하여 SPI Clock 생성
 
 ---
 
@@ -266,11 +267,11 @@ SPI Slave는 Mode 0으로 구현하여 Master/Slave 간 Mode 0 통신을 검증�
 
 #### Simulation Waveform
 
-<img src="images/spi_master_sim.png">
+<img src="images/spi_master_sim.png" width="800">
 
 - CPOL/CPHA 설정에 따른 SPI Master의 Mode 0~3 동작 확인
 
-<img src="images/spi_mode0_sim.png">
+<img src="images/spi_mode0_sim.png" width="800">
 
 - SPI Mode 0 (CPOL=0, CPHA=0)에서 Master와 Slave 간 Full-Duplex 데이터 송수신 확인
 
@@ -312,9 +313,10 @@ Master RX Data에 대한 Functional Coverage를 측정하였습니다.
 ### SPI FPGA Test
 
 #### Test Scenario
+
 - 두 FPGA 간 SPI Full-Duplex 통신 검증
-- Master에서 `8'h1 → 8'h3 → 8'h6 → 8'he → 8'hf` 순서로 데이터 전송
-- 첫 번째 전송에서는 Slave의 초기값 `8'h0` 수신
+- Master에서 `8'h01 → 8'h03 → 8'h06 → 8'h0E → 8'h0F` 순서로 데이터 전송
+- 첫 번째 전송에서는 Slave의 초기값 `8'h00` 수신
 - 이후 전송에서는 직전 TX Data를 RX Data로 수신
 
 #### TX: `8'd1` / RX: `8'd0`
