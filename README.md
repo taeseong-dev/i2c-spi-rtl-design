@@ -146,7 +146,7 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 <img src="images/i2c_sim_write.png" width = "700">
 
 - Sequence: START → ADDRESS/RW (`0x24`) → WRITE DATA (`0xAB`) → WRITE DATA (`0xCD`) → STOP
-- Multi-byte Data Write 수행
+- Multi-byte Write 수행
 - Master TX Data와 Slave RX Data의 일치 여부 확인
 
 <img src="images/i2c_sim_read.png" width = "700">
