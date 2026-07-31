@@ -32,6 +32,7 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
   - [SPI Top Architecture](#spi-top-architecture)
   - [SPI Timing Diagram](#spi-timing-diagram)
   - [SPI Master](#spi-master)
+  - [SPI Slave](#spi-slave)
   - [SPI Verification](#spi-verification)
   - [SPI FPGA Test](#spi-fpga-test)
 
@@ -257,6 +258,14 @@ Multi-byte Transfer Length에 대한 Functional Coverage를 확인하였습니�
 - Clock Divider를 이용하여 `SCLK` 생성
 - `clk_div` 설정값을 통해 SPI 통신 속도 조절
 - Half Tick마다 `SCLK`를 Toggle하여 SPI Clock 생성
+
+---
+
+### SPI Slave
+
+- SPI Mode 0 기준으로 `SCLK` Rising Edge에서 `MOSI` Data Sampling
+- Shift Register를 이용하여 `MISO` Data 출력
+- `CS_n`이 High로 전환되면 수신 Data 저장 및 전송 완료
 
 ---
 
