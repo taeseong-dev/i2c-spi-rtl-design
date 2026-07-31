@@ -315,7 +315,7 @@ Master RX Data에 대한 Functional Coverage를 측정하였습니다.
 
 #### Verification Result
 
-> Random Sequence 1000회를 수행하여 Scoreboard 기반 Transaction 검증을 진행하였습니다.
+> Random Sequence 1,000회를 수행하여 Scoreboard 기반 Transaction 검증을 진행하였습니다.
 
 <img src="images/spi_uvm_scb.png" width="350">
 
