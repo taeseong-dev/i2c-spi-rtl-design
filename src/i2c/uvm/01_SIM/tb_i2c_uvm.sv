@@ -94,9 +94,6 @@ class i2c_seq_item extends uvm_sequence_item;
 		super.new(name);
 	endfunction
 
-//	function string convert2string();
-//		return $sformatf("tx_data=0x%02h, rx_data=0x%02h, read = %0d", tx_data, rx_data, is_read);
-//	endfunction
 	function string convert2string();
 	
 		string str;
@@ -136,10 +133,8 @@ class i2c_base_seq extends uvm_sequence#(i2c_seq_item);
 		item = i2c_seq_item::type_id::create("item");
 
 		start_item(item);
-		//if(!item.randomize() with { is_read == 1; tx_data == 8'h00;})
 		if(!item.randomize() with { is_read == 1; num_data == 1;})
 			`uvm_fatal(get_type_name(), "do_read() Randomize() fail!")
-		//item.rx_data = 8'h77;
 		finish_item(item);
 		//`uvm_info(get_type_name(), $sformatf("do_read() complete : addr : 0x%02h, rx_data=0x%02h", item.addr, item.rx_data), UVM_LOW)
 	endtask
@@ -311,7 +306,6 @@ endclass
 
 class i2c_scoreboard extends uvm_scoreboard;
 	`uvm_component_utils(i2c_scoreboard)
-	//uvm_analysis_imp #(i2c_seq_item, i2c_scoreboard) ap_imp;
 
 	uvm_tlm_analysis_fifo #(i2c_seq_item) exp_fifo;
 	uvm_tlm_analysis_fifo #(i2c_seq_item) act_fifo;
@@ -358,7 +352,6 @@ class i2c_scoreboard extends uvm_scoreboard;
 
 	function void build_phase(uvm_phase phase);
 		super.build_phase(phase);
-		//ap_imp = new("ap_imp",this);
 
 		exp_fifo = new("exp_fifo", this);
 		act_fifo = new("act_fifo", this);
@@ -494,7 +487,9 @@ class i2c_scoreboard extends uvm_scoreboard;
 						(addr_ack_fail_cnt   == 0) &&
         				(addr_nack_fail_cnt  == 0) &&
         				(write_data_fail_cnt == 0) &&
-        				(read_data_fail_cnt  == 0);
+        				(read_data_fail_cnt  == 0) &&
+						(write_slv_fail_cnt  == 0) &&
+						(data_ack_fail_cnt   == 0);
 
 
 		`uvm_info(get_type_name(), "\n\n", UVM_LOW)
@@ -563,18 +558,8 @@ class i2c_monitor extends uvm_monitor;
 			wait_start();
 			num = 0;
 			get_addr(item);
-			//get_data(item);
 			get_data_temp(item);
 
-			//get slave_rx_data
-			//if(!item.actual_rw) begin
-			//	wait(vif.mon_cb.slave_done);
-			//	item.slave_data = vif.mon_cb.slave_data;
-			//	`uvm_info(get_type_name(), $sformatf("slave_data=0x%02h", item.slave_data), UVM_MEDIUM)
-
-			//end
-
-			//wait_stop();
 			foreach(item.actual_data[i]) begin
 				`uvm_info(get_type_name(), $sformatf("actual_data[%0d]=0x%02h", i, item.actual_data[i]), UVM_MEDIUM)
 			end
@@ -621,9 +606,6 @@ class i2c_monitor extends uvm_monitor;
 
 		@(posedge vif.mon_cb.scl);
 		item.actual_addr_ack = vif.mon_cb.sda;
-		//item.addr = vif.mon_cb.tx_data[7:1];
-		//item.is_read = vif.mon_cb.tx_data[0];
-
 
 		//`uvm_info(get_type_name(), $sformatf("monitoring.. actual_addr = 0x%02h, actual_rw = %d", item.actual_addr, item.actual_rw), UVM_LOW)
 
@@ -638,15 +620,11 @@ class i2c_monitor extends uvm_monitor;
 //			`uvm_info(get_type_name(), $sformatf(" actual_data[i] = %0d  ", actual_data[i]), UVM_LOW)
 			end
 			
-			//item.actual_data = actual_data;
 			item.actual_data.push_back(actual_data);
 
 			@(posedge vif.mon_cb.scl);
 			item.actual_data_ack = (vif.mon_cb.sda);
-
-			//item.tx_data = vif.mon_cb.tx_data;
 			
-
 			`uvm_info(get_type_name(), $sformatf("monitoring.. actual_data = 0x%02h, actual_data_ack = %d, data_size = %d", 
 												item.actual_data[num], item.actual_data_ack, item.actual_data.size()), UVM_MEDIUM)
 			num++;
@@ -654,7 +632,6 @@ class i2c_monitor extends uvm_monitor;
 //		end
 	endtask
 	
-
 	task get_data_temp(i2c_seq_item item);
 		fork
 			begin
@@ -852,7 +829,6 @@ class i2c_env extends uvm_env;
 
 	function void connect_phase(uvm_phase phase);
 		super.connect_phase(phase);
-		//agt.mon.ap.connect(scb.ap_imp);
 		agt.drv.ap.connect(scb.exp_fifo.analysis_export);
 		agt.mon.ap.connect(scb.act_fifo.analysis_export);
 
