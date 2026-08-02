@@ -4,4 +4,4 @@
 ../00_RTL/spi_slave.sv
 
 # Testbench
-tb/tb_spi_uvm.sv
+./tb_spi_uvm.sv
