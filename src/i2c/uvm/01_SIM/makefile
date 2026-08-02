@@ -1,4 +1,4 @@
-#TC ?= ram_base_test
+TC ?= i2c_rand_test
 SEED ?= 1234
 
 VCS_OPTS := -full64 -sverilog 
