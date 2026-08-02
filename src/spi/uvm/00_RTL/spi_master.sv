@@ -128,7 +128,7 @@ module spi_master (
                     end
                 end
                 STOP: begin
-                    sclk_r <= 1'b0;
+                    sclk_r <= cpol;
                     cs_n   <= 1'b1;
                     done   <= 1'b1;
                     busy   <= 1'b0;
