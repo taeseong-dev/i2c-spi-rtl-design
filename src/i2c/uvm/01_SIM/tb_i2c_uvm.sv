@@ -409,7 +409,7 @@ class i2c_scoreboard extends uvm_scoreboard;
 				end
 				else begin
 					`uvm_error(get_type_name(), $sformatf("ADDR_MACK ERROR, sequence=%0d, ack=%0d", seq_num, act_item.actual_addr_ack))
-					addr_nack_pass_cnt++;
+					addr_nack_fail_cnt++;
 				end
 				seq_num++;
 				continue;
