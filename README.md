@@ -158,41 +158,40 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 
 #### UVM Architecture
 
-<img src="images/i2c_uvm.png" width = "500">
+<img src="images/i2c_uvm_bd.png" width="700">
 
-- Sequence에서 생성한 Transaction을 Driver를 통해 DUT에 전달
-- Monitor에서 SCL/SDA 신호를 Sampling하여 실제 Transaction 생성
-- 예상 Transaction과 실제 Transaction을 Scoreboard에서 비교
-- Functional Coverage를 통해 주요 동작 및 데이터 범위 검증
+- CMD Monitor와 BUS Monitor에서 Expected/Actual Transaction 생성
+- Scoreboard에서 Address/RW, ACK/NACK 및 Command/Bus/Slave Data 비교
+- BUS Monitor에서 수집한 Transaction을 기반으로 Functional Coverage 측정
 
 #### Test Scenarios
 
 | Scenario | Description |
 |:---|:---|
-| Write | Single-byte 및 Multi-byte Write 검증 |
-| Read | Single-byte Read 검증 |
-| Write & Read | Write Data를 Read하여 데이터 일치 여부 검증 |
-| Random | Write/Read Sequence를 Random하게 반복 수행 |
+| Write | 1~8-byte Write 및 Command/Bus/Slave Data 비교 |
+| Read | Single-byte Read 및 Bus/Master RX Data 비교 |
+| Write & Read | 마지막 Write Data를 Read하여 데이터 일치 여부 확인 |
+| Random | Address와 Write/Read를 Random하게 생성하여 1,000회 반복 검증 |
 
 #### Functional Coverage
 
-Random Sequence를 수행하여 Address, Read/Write Operation, Data 및<br>
-Multi-byte Transfer Length에 대한 Functional Coverage를 확인하였습니다.
+Random Sequence를 통해 주요 Address, R/W, Write Data 및 Transfer Length를 확인하였습니다.
 
 | Coverage Item | Description |
 |:---|:---|
 | Address | Valid Address (`7'h12`) 및 Invalid Address |
-| RW | Read / Write Operation |
-| Data | Boundary Value, Pattern, Bit Pattern 및 Data Range |
-| Num Data | Multi-byte Transfer Length (1~8 bytes) |
+| R/W | Write 및 Read |
+| Address × R/W | Valid/Invalid Address와 Write/Read 조합 |
+| Write Data | 8-bit Write Data Range |
+| Write Length | 1~8-byte Transfer Length |
 
-<img src="images/i2c_cov.png" width="200">
+<img src="images/i2c_uvm_coverage.png" width="300">
 
 #### Verification Result
 
-> Random Sequence 1,000회를 수행하고, Scoreboard를 통해 예상 Transaction과 실제 Transaction을 비교하였습니다.
+> Random Sequence 1,000회를 수행하여 Address/RW, ACK/NACK 및 Command/Bus/Slave Data의 일치 여부를 확인하였습니다.
 
-<img src="images/i2c_scb.png" width="350">
+<img src="images/i2c_uvm_scoreboard.png" width="450">
 
 ### I2C FPGA Test
 
