@@ -4,4 +4,4 @@
 ../00_RTL/i2c_slave.sv
 
 # Testbench
-./tb_i2c_uvm.sv
+./tb/tb_i2c_uvm.sv
