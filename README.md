@@ -270,8 +270,7 @@ Random Sequence를 통해 주요 Address, R/W, Write Data 및 Transfer Length를
 
 ### SPI Verification
 
-SPI Master는 Mode 0~3을 지원하며, <br>
-SPI Slave는 Mode 0으로 구현하여 Master/Slave 간 Mode 0 통신을 검증하였습니다.
+SPI Master의 Mode 0~3 동작과 Master/Slave 간 Mode 0 Full-Duplex 통신을 검증하였습니다.
 
 #### Simulation Waveform
 
@@ -285,38 +284,63 @@ SPI Slave는 Mode 0으로 구현하여 Master/Slave 간 Mode 0 통신을 검증�
 
 #### UVM Architecture
 
-<img src="images/spi_uvm.png" width = "500">
+##### Master/Slave Mode 0
 
-- Sequence에서 생성한 Transaction을 Driver를 통해 DUT에 전달
-- Monitor에서 `SCLK`, `MOSI`, `MISO`, `CS_n`을 Sampling하여 실제 Transaction 생성
-- 예상 Transaction과 실제 Transaction을 Scoreboard에서 비교
-- Functional Coverage를 통해 송수신 데이터 범위 검증
+<img src="images/spi_uvm_bd.png" width = "700">
+
+- CMD Monitor와 BUS Monitor에서 Expected/Actual Transaction 생성
+- SPI Master와 RTL Slave를 연결하여 Mode 0 Full-Duplex 통신 검증
+- Scoreboard에서 Master TX/Slave RX 및 Slave TX/Master RX Data 비교
+- BUS Monitor에서 수집한 Transaction을 기반으로 Functional Coverage 측정
+
+##### SPI Master Mode 0~3
+
+<img src="images/spi_uvm_bd_masteronly.png" width="700">
+
+- CMD Monitor와 BUS Monitor에서 Expected/Actual Transaction 생성
+- SPI Slave Model에서 CPOL/CPHA에 맞춰 `MISO` Data 출력
+- Scoreboard에서 Mode, Master TX, Slave TX 및 Master RX Data 비교
+- BUS Monitor에서 수집한 Transaction을 기반으로 Functional Coverage 측정
 
 #### Test Scenarios
 
-- Master TX Data와 Slave RX Data의 일치 여부 검증
-- Slave TX Data와 Master RX Data의 일치 여부 검증
-- Random Data 기반 Full-Duplex 송수신 검증
+| Scenario | Description |
+|:---|:---|
+| Master/Slave Mode 0 | Master TX/Slave RX 및 Slave TX/Master RX Data 비교 |
+| Master Mode 0~3 | CPOL/CPHA에 따른 Mode와 MOSI/MISO Data 비교 |
+| Random | 각 UVM 환경에서 송수신 Data를 Random하게 생성하여 1,000회 반복 검증 |
 
 #### Functional Coverage
 
-Covergroup을 통해 Master TX, Slave RX, Slave TX 및 <br> 
-Master RX Data에 대한 Functional Coverage를 측정하였습니다.
+Random Sequence를 통해 SPI Mode와 MOSI/MISO Data 범위를 확인하였습니다.
 
 | Coverage Item | Description |
 |:---|:---|
-| Master TX | Master 송신 데이터 |
-| Slave RX | Slave 수신 데이터 |
-| Slave TX | Slave 송신 데이터 |
-| Master RX | Master 수신 데이터 |
+| Mode | CPOL/CPHA에 따른 SPI Mode 0~3 |
+| MOSI Data | Master에서 송신한 8-bit Data |
+| MISO Data | Slave에서 송신한 8-bit Data |
 
-<img src="images/spi_uvm_cov.png" width="200">
+##### Master/Slave Mode 0
+
+<img src="images/spi_mode0_uvm_cov.png" width="300">
+
+##### SPI Master Mode 0~3
+
+<img src="images/spi_master_uvm_cov.png" width="300">
 
 #### Verification Result
 
-> Random Sequence 1,000회를 수행하여 Scoreboard 기반 Transaction 검증을 진행하였습니다.
+##### Master/Slave Mode 0
 
-<img src="images/spi_uvm_scb.png" width="350">
+> Random Sequence 1,000회를 수행하여 Master TX/Slave RX 및 Slave TX/Master RX Data의 일치 여부를 확인하였습니다.
+
+<img src="images/spi_mode0_uvm_scb.png" width="450">
+
+##### SPI Master Mode 0~3
+
+> Random Sequence 1,000회를 수행하여 Mode, Master TX, Slave TX 및 Master RX Data의 일치 여부를 확인하였습니다.
+
+<img src="images/spi_master_uvm_scb.png" width="450">
 
 ### SPI FPGA Test
 
