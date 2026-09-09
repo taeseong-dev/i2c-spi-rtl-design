@@ -51,6 +51,10 @@ module spi_master (
                     half_tick <= 1'b0;
                 end
             end
+            else begin
+                div_cnt <= 0;
+                half_tick <= 0;
+            end
         end
     end
 
