@@ -112,9 +112,10 @@ Simulation, UVM 및 FPGA 검증을 진행한 프로젝트입니다.
 
 <img src="images/i2c_pull_up.png" width="600">
 
-- SDA는 Open-Drain 방식으로 동작
-- Low 출력 시 `SDA = 0`, High 출력 시 `SDA = High-Z`
-- Pull-up 저항을 통해 SDA가 High 상태를 유지
+- Tri-state buffer로 Open-Drain 동작 구현
+- `SDA_O = 0`: 출력 버퍼 활성화 → SDA를 Low로 구동
+- `SDA_O = 1`: 출력 버퍼 비활성화 → High-Z로 출력 해제
+- Master와 Slave가 모두 출력을 해제하면 Pull-up 저항에 의해 SDA가 High로 유지
 
 ---
 
